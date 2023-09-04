@@ -2,9 +2,9 @@
 
 import os
 
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, flash
 from models import connect_db, db, Cupcake
-
+from forms import AddCupcakeForm
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
@@ -18,11 +18,12 @@ connect_db(app)
 
 
 ###Part Five: homepage for frontend
-
 @app.get('/')
 def show_frontend():
     """Set up a template page for JavaScript to populate"""
-    return render_template('home.html')
+    form = AddCupcakeForm()
+    return render_template('home.html', form=form)
+
 
 
 @app.get('/api/cupcakes')
@@ -79,24 +80,6 @@ def update_cupcake(id):
     #Create a dictionary: default values are the current ones, but
     #updates whenever it can find that key in the JSON.
 
-    #TODO: is there a way to loop over these? It feels strange
-    #that I'm making this 'updated' container rather than simply
-    #inserting in the loop, but I can't do cupcake['flavor'] right?
-    # keys = ['flavor', 'size', 'rating', 'image_url']
-    # updated = cupcake.serialize()
-
-    # for key in keys:
-    #     new_value = request.json.get(key)
-    #     if new_value:
-    #         updated[key] = new_value
-
-    # cupcake.size = updated['flavor']
-    # cupcake.size = updated['size']
-    # cupcake.rating = updated['rating']
-    # cupcake.image_url = updated['image_url']
-
-
-    #TODO: modify, cupcake.flavor = request.json.get(key, cupcake.flavor)
     cupcake.flavor = request.json.get('flavor', cupcake.flavor)
     cupcake.size = request.json.get('size', cupcake.size)
     cupcake.rating = request.json.get('rating', cupcake.rating)
@@ -117,3 +100,19 @@ def delete_cupcake(id):
     db.session.commit()
 
     return jsonify({"deleted": id})
+
+
+##Handle search?
+
+@app.get('/api/cupcakes/search')
+def get_searched_cupcakes():
+
+    search_term = request.args.get('search_term')
+
+    some_cupcakes = Cupcake.query.filter(
+        Cupcake.flavor.ilike('%' + search_term + "%")).all()
+
+
+    #Define a query based on search term
+    serialized = [cupcake.serialize() for cupcake in some_cupcakes]
+    return jsonify(cupcakes = serialized)

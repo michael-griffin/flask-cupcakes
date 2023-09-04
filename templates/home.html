@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="static/styles.css">
+  <script src="https://unpkg.com/jquery" defer="true"></script>
+  <script src="https://unpkg.com/lodash" defer="true"></script>
+  <script src="static/index.js" defer="true"></script>
+</head>
+<body>
+  <h1>Cupcake Emporium</h1>
+
+  {% for msg in get_flashed_messages() %}
+  <p style="color:red">{{ msg }}</p>
+  {% endfor %}
+  <!--New cupcake form-->
+
+
+  <form action="" method="get" class="add-cupcake-form">
+
+    {{ form.hidden_tag() }}
+
+    {% for field in form if field.widget.input_type != "hidden" %}
+      <div class="new-cupcake-input">
+        {{ field.label }}
+        {{ field }}
+        {% for error in field.errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+
+    {% endfor %}
+
+    <button class="new-cupcake-submit" type="submit">Add Cupcake</button>
+  </form>
+
+
+  <form action="/api/cupcakes/search" method="GET" class="search-cupcakes-form">
+    <label for="search_term">Search by Flavor: </label>
+    <input class="search_term" type="text" name="search_term">
+    <button class="search-submit" type="submit">Search</button>
+  </form>
+  <!--List for JS-->
+  <h2>Cupcake list starts here: </h2>
+  <ul class="cupcake-list">
+
+  </ul>
+</body>
+</html>

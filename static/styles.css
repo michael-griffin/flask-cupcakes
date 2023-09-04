@@ -1,0 +1,12 @@
+.cupcake-list {
+  display: flex;
+  justify-content: space-around;
+}
+
+.cupcake-card-img {
+  width: 100px;
+}
+
+li {
+  list-style-type: none;
+}
