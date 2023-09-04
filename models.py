@@ -6,14 +6,15 @@ db = SQLAlchemy()
 
 DEFAULT_IMAGE_URL = "https://tinyurl.com/demo-cupcake"
 
-def connect_db(app):
+def connect_db(app): #TODO: add docstring
     app.app_context().push()
     db.app = app
     db.init_app(app)
 
 
 class Cupcake(db.Model):
-
+    """Cupcake data. defaults to a nice chocolate cupcake it seems.
+    flavor, size and rating required"""
     __tablename__ = "cupcakes"
 
     id = db.Column(
@@ -39,6 +40,7 @@ class Cupcake(db.Model):
 
     image_url = db.Column(
         db.String(500),
+        nullable=False, #this is ok
         default= DEFAULT_IMAGE_URL
     )
 

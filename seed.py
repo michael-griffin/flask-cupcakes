@@ -1,6 +1,6 @@
 # noinspection PyUnresolvedReferences
 from app import app
-from models import db, Cupcake
+from models import db, Cupcake, DEFAULT_IMAGE_URL
 
 db.drop_all()
 db.create_all()
